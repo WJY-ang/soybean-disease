@@ -22,11 +22,16 @@ Designed an asymmetric parallel branch structure with learnable fusion weights t
 
 ## 3. Experimental dataset
 
-**3.1 Dataset description**
+### 3.1 Dataset description
 The self-built soybean dataset was collected from Henan Province, China, comprising 7,516 images covering 4 categories: Grey spot, Healthy, Macular (Brown spot), and Mosaic. The dataset is divided into training, validation, and testing sets at a 3:1:1 ratio. Additionally, the public PlantVillage wheat dataset is used to validate cross-crop generalization.
 
-**3.2 Dataset structure**
-The dataset folder should be organized as follows. (You can download the dataset from [Insert your Baidu Netdisk / Google Drive link here]):
+### 3.2 Dataset structure
+The dataset folder should be organized as follows. 
+
+**Dataset Download:** The complete dataset is available via Baidu Netdisk. 
+*   **Link:** https://pan.baidu.com/s/1jmIrZ7lxCrI0ENgw2ZqkGA
+*   **Password:** SBDI
+
 ```text
 dataset/
 ├── train/
@@ -45,79 +50,79 @@ dataset/
     ├── Macular/
     └── Mosaic/
 ```
-4. Experimental environment configuration
-4.1 Dependency Installation
+## 4. Experimental environment configuration
+
+### 4.1 Dependency Installation
 Recommend using Anaconda to create virtual environments and ensure that the dependent versions match.
 
 Create and activate a virtual environment:
 
-bash
+```bash
 conda create -n mdc-convnext python=3.11
 conda activate mdc-convnext
+```
 Install PyTorch and TorchVision (compatible with CUDA 12.8, CPU users can replace it with CPU version):
 
-bash
+```bash
 pip install torch==2.12.0 torchvision --index-url https://download.pytorch.org/whl/cu128
+```
 Install other dependency libraries:
 
-bash
+```bash
 pip install numpy matplotlib opencv-python pandas pillow tqdm timm scikit-learn seaborn
-4.2 Hardware Requirements
+```
+### 4.2 Hardware Requirements
+*   **OS:** Windows 11 64-bit / Linux
+*   **GPU:** Recommended NVIDIA GPU (e.g., RTX 5060 Laptop GPU or higher).
+*   **Python:** 3.11.15
+*   **PyTorch:** >= 2.0.0
 
-OS: Windows 11 64-bit / Linux
 
-GPU: Recommended NVIDIA GPU (e.g., RTX 5060 Laptop GPU or higher).
+## 5. Experimental results
 
-Python: 3.11.15
-
-PyTorch: >= 2.0.0
-
-5. Experimental results
-5.1 Comparison of Core Indicators
+### 5.1 Comparison of Core Indicators
 The performance comparison between MDC-ConvNeXt and other mainstream deep learning models on the soybean leaf disease dataset is as follows:
 
-Model	Params (M)	FLOPs (G)	Inference Time (ms)	Accuracy (%)
-Classical ConvNeXt V2	14.99	2.44	29.00	98.34
-Improved ConvNeXt V2	15.09	2.49	25.00	98.40
-Improved ConvNeXt V2 + MLCA	15.09	2.49	28.00	99.00
-Improved ConvNeXt V2 + MDConv	15.27	2.54	33.00	98.54
-MDC-ConvNeXt (Ours)	15.27	2.54	35.90	99.34
+| Model | Params (M) | FLOPs (G) | Inference Time (ms) | Accuracy (%) |
+| :--- | :--- | :--- | :--- | :--- |
+| Classical ConvNeXt V2 | 14.99 | 2.44 | 29.00 | 98.34 |
+| Improved ConvNeXt V2 | 15.09 | 2.49 | 25.00 | 98.40 |
+| Improved ConvNeXt V2 + MLCA | 15.09 | 2.49 | 28.00 | 99.00 |
+| Improved ConvNeXt V2 + MDConv | 15.27 | 2.54 | 33.00 | 98.54 |
+| **MDC-ConvNeXt (Ours)** | **15.27** | **2.54** | **35.90** | **99.34** |
+
 Note: The model achieves 99.34% accuracy with a lightweight design, balancing accuracy and efficiency for real-time edge screening.
 
-6. Code usage instructions
-6.1 Model Training
+## 6. Code usage instructions
+
+### 6.1 Model Training
 Run the train.py script to start training, supporting configuration adjustment through parameters:
 
-bash
+```bash
 python train.py --data_dir ./dataset --epochs 100 --batch_size 16 --lr 0.001
+```
 Main configuration items (can be manually modified in the script):
-
-data_dir: Path to your dataset.
-
-img_size: 224
-
-batch_size: 16 (Default, adjust according to VRAM)
-
-epochs: 100
-
-lr: 0.001
+*   `data_dir`: Path to your dataset.
+*   `img_size`: 224
+*   `batch_size`: 16 (Default, adjust according to VRAM)
+*   `epochs`: 100
+*   `lr`: 0.001
 
 Automatically complete after running:
+*   Load training/validation/test sets.
+*   Train the model and output loss, accuracy for each round.
+*   Automatically save the best model (based on validation set accuracy) to `./weights/best_model.pth`.
+*   Output the final test set report.
 
-Load training/validation/test sets.
 
-Train the model and output loss, accuracy for each round.
-
-Automatically save the best model (based on validation set accuracy) to ./weights/best_model.pth.
-
-Output the final test set report.
-
-6.2 Testing
-
-bash
+### 6.2 Testing
+```bash
 python test.py --weights ./weights/best_model.pth --data_dir ./dataset/test
-7. Project file structure
-text
+```
+
+## 7. Project file structure
+
+```text
 MDC-ConvNeXt/
 ├── dataset/                  # Put your dataset here
 ├── weights/                  # Saved model weights (.pth)
@@ -126,20 +131,21 @@ MDC-ConvNeXt/
 ├── test.py                   # Evaluation script
 ├── requirements.txt          # Dependencies
 └── README.md
-8. Known issues and precautions
-Pre-trained Weights: Due to GitHub's file size restrictions, the pre-trained weight file (convnextv2_nano.pt or .pth) is not included directly in this repository. You can download it from the Releases section of this repository.
+```
 
-VRAM usage: During training, if batch_size=16 leads to OOM (Out of Memory), reduce it to 8 or 4, and appropriately lower the learning rate.
+## 8. Known issues and precautions
+*   **Pre-trained Weights:** Due to GitHub's file size restrictions, the pre-trained weight file (`convnextv2_nano.pt` or `.pth`) is not included directly in this repository. You can download it from the **Releases** section of this repository.
+*   **VRAM usage:** During training, if `batch_size=16` leads to OOM (Out of Memory), reduce it to 8 or 4, and appropriately lower the learning rate.
+*   **Data Augmentation:** The model uses weak data augmentation and low regularization strategies to preserve critical lesion features. Modifying the augmentation strategy may impact final accuracy.
+*   **Environment mismatch:** If you encounter CUDA incompatibility when installing PyTorch, you can adjust the PyTorch version according to your local CUDA version or switch to CPU.
 
-Data Augmentation: The model uses weak data augmentation and low regularization strategies to preserve critical lesion features. Modifying the augmentation strategy may impact final accuracy.
 
-Environment mismatch: If you encounter CUDA incompatibility when installing PyTorch, you can adjust the PyTorch version according to your local CUDA version or switch to CPU.
+## 9. References and contact information
 
-9. References and contact information
-9.1 Reference Method
+### 9.1 Reference Method
 The paper is currently in the submission stage and will be updated to BiBTeX format after its official publication. Currently available for temporary reference:
 
-bibtex
+```bibtex
 @article{wang2026mdc,
   title={MDC-ConvNeXt: A Lightweight Deep Learning Framework for Soybean Leaf Disease Recognition},
   author={Wang, Jiayi and Zhao, Hao and Xu, Laixiang and ...},
@@ -147,9 +153,10 @@ bibtex
   year={2026},
   note={Manuscript submitted for publication}
 }
-9.2 Contact Information
+```
+
+### 9.2 Contact Information
 If you encounter code running issues or academic exchange needs, please contact:
+*   **Email:** wangjiayi@huuc.edu.cn
+*   **GitHub Issue:** Submit an issue directly to this repository and we will respond within 1-3 business days.
 
-Email: wangjiayi@huuc.edu.cn
-
-GitHub Issue: Submit an issue directly to this repository and we will respond within 1-3 business days.
